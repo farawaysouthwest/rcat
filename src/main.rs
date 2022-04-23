@@ -1,5 +1,5 @@
-use std::io::Read;
-use std::io::{self, Write};
+use std::io::{self, Write, Read};
+use std::fs::File;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -14,7 +14,7 @@ fn main() {
     let args = Cli::parse();
 
     // open file
-    let file = std::fs::File::open(args.path).expect("could not open file");
+    let file = File::open(args.path).expect("could not open file");
 
     // load file to reader
     let mut reader = io::BufReader::new(file);
