@@ -18,7 +18,7 @@ fn main() -> Result<(), Error>{
     let args = Cli::parse();
 
     // load file to reader.
-    let file = File::open(args.path).expect("could not open file");
+    let file = File::open(args.path)?;
     let buffer = io::BufReader::new(file);
 
     // iterate over lines in buffer, write to stdout.
