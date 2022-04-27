@@ -1,4 +1,4 @@
-use std::io::{self, Write, Read};
+use std::io::{self, Write, Error, BufRead};
 use std::fs::File;
 use clap::Parser;
 
@@ -8,24 +8,23 @@ struct Cli {
     path: std::path::PathBuf
 }
 
-fn main() {
+fn main() -> Result<(), Error>{
 
-    // parse cli args
-    let args = Cli::parse();
-
-    // open file
-    let file = File::open(args.path).expect("could not open file");
-
-    // load file to reader
-    let mut reader = io::BufReader::new(file);
-
-    
-    // read from buffer into string
-    let mut content = String::new();
-    reader.read_to_string(&mut content).expect("could not read file");
-
-    // output to standard output buffer
+    // standard output buffer.
     let stdout = io::stdout(); // get the global stdout entity
     let mut handle = io::BufWriter::new(stdout);
-    writeln!(handle, "{}", content).expect("could not output data");
+
+    // parse cli args.
+    let args = Cli::parse();
+
+    // load file to reader.
+    let file = File::open(args.path).expect("could not open file");
+    let buffer = io::BufReader::new(file);
+
+    // iterate over lines in buffer, write to stdout.
+    for line in buffer.lines() {
+        let content = line?;
+        writeln!(handle, "{}", content)?;
+    }
+    Ok(())
 }
