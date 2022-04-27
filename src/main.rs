@@ -23,8 +23,7 @@ fn main() -> Result<(), Error>{
 
     // iterate over lines in buffer, write to stdout.
     for line in buffer.lines() {
-        let content = line?;
-        writeln!(handle, "{}", content)?;
+        writeln!(handle, "{}", line.unwrap_or_default())?;
     }
     Ok(())
 }
